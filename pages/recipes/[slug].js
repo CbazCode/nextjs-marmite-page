@@ -19,6 +19,7 @@ export const getStaticPaths = async () => {
     }
   })
 
+  //Si es q mandamos un slug que no esta generado originalmente hace la consulta para generarlo mientras tanto muestra el fallback en forma de skeleton
   return {
     paths,
     fallback: true
@@ -30,6 +31,15 @@ export const getStaticProps = async ({ params }) => {
     content_type: 'recipe',
     'fields.slug': params.slug
   })
+  //Si despues de hacer la consulta para crear la nueva pagina no la encuentra se ejecuta el redirect
+  if(!items.length){
+    return{
+      redirect: { 
+        destination: '/',
+        permanent: false
+      }
+    }
+  }
 
   return {
     props: { recipe: items[0] },
@@ -99,3 +109,4 @@ export default function RecipeDetails({ recipe }) {
     </div>
   )
 }
+
